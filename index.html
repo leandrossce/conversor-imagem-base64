@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conversor de base64 para imagem</title>
+</head>
+<body>
+    <h1>Converter Base64 para Imagem</h1>
+    <textarea id="base64Input_Output" rows="10" cols="60" placeholder="Cole seu texto em base64 aqui..."></textarea>
+    <br>
+    <button onclick="convertBase64ToImage()">Converter</button>
+	<button onclick="copyBase64()">Copiar...</button>
+    <br><br>
+    <img id="image" alt="Base64 Image" />
+	
+	<h1>Converter Imagem para Base64</h1>
+    <input type="file" id="imageInput" accept="image/*">
+    <br><br>
+
+    <script>
+        function convertBase64ToImage() {
+            const base64String = document.getElementById('base64Input_Output').value;
+            const img = document.getElementById('image');
+            img.src = `data:image/png;base64,${base64String}`;
+			
+            if (base64Input_Output.value.trim() === "") {
+                alert("Não consta texto em base64 para conversão!");
+            }			
+			
+        }
+		
+        function copyBase64() {
+            const base64Output = document.getElementById('base64Input_Output');
+            if (base64Output.value.trim() === "") {
+                alert("Não consta texto em base64 para copiar!");
+            } else {
+                base64Output.select();
+                base64Output.setSelectionRange(0, 99999); // For mobile devices
+                document.execCommand("copy");
+                alert("Texto em Base64 copiado!");
+            }
+		}
+			
+        document.getElementById('imageInput').addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const base64String = e.target.result;
+                    document.getElementById('base64Input_Output').value = base64String.split(',')[1]; // Remove prefix
+                    document.getElementById('preview').src = base64String;
+                };
+                reader.readAsDataURL(file);
+            }
+        });		
+    </script>
+</body>
+</html>
